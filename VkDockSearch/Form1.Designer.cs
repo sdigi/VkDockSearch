@@ -36,9 +36,11 @@
             this.tDocIDEnd = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.progressDoc = new System.Windows.Forms.ProgressBar();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip1.SuspendLayout();
+            this.rLog = new System.Windows.Forms.RichTextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // tUserId
@@ -95,7 +97,7 @@
             // 
             this.btnSearch.Location = new System.Drawing.Point(12, 90);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(281, 23);
+            this.btnSearch.Size = new System.Drawing.Size(399, 23);
             this.btnSearch.TabIndex = 6;
             this.btnSearch.Text = "Найти";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -103,34 +105,75 @@
             // 
             // progressDoc
             // 
-            this.progressDoc.Location = new System.Drawing.Point(15, 119);
+            this.progressDoc.Location = new System.Drawing.Point(12, 119);
             this.progressDoc.Name = "progressDoc";
-            this.progressDoc.Size = new System.Drawing.Size(278, 23);
+            this.progressDoc.Size = new System.Drawing.Size(399, 23);
             this.progressDoc.Step = 1;
             this.progressDoc.TabIndex = 7;
             // 
-            // statusStrip1
+            // rLog
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 148);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(303, 22);
-            this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "statusStrip1";
+            this.rLog.Location = new System.Drawing.Point(12, 168);
+            this.rLog.Name = "rLog";
+            this.rLog.ReadOnly = true;
+            this.rLog.Size = new System.Drawing.Size(399, 105);
+            this.rLog.TabIndex = 8;
+            this.rLog.Text = "";
             // 
-            // toolStripStatusLabel1
+            // label4
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(211, 152);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(26, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Лог";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(301, 19);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(110, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Количество потоков";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Location = new System.Drawing.Point(304, 39);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(107, 20);
+            this.numericUpDown1.TabIndex = 12;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 170);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(421, 285);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.rLog);
             this.Controls.Add(this.progressDoc);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label3);
@@ -139,11 +182,12 @@
             this.Controls.Add(this.tDocIDStart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tUserId);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "VkDockSearch";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,8 +203,10 @@
         private System.Windows.Forms.TextBox tDocIDEnd;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.ProgressBar progressDoc;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.RichTextBox rLog;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
 
