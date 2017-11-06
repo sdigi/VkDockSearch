@@ -1,5 +1,5 @@
 # VkDockSearch
-Поиск отрытых доков у юзверя
+Поиск открытых доков у юзверя
 
 # Инструкция
 ![Скриншот](https://image.prntscr.com/image/vCWU9WKvTJScYbbSBf6nqg.png)
