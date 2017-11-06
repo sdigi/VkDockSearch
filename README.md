@@ -4,7 +4,7 @@
 # Инструкция
 ![Скриншот](https://image.prntscr.com/image/vCWU9WKvTJScYbbSBf6nqg.png)
 
-Скачать: http://rgho.st/796H89YBc
+Скачать: http://rgho.st/6BlJqT6JP
 * Вводим id пользователя
 * Вводим стартовое значения id дока
 * Вводим конечное
