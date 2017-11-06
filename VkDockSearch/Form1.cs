@@ -46,7 +46,8 @@ namespace VkDockSearch
 
         private async Task ParsingDocUserIdAync(object inParam)
         {
-            await Task.Run(()=> {
+            await Task.Run(() =>
+            {
                 int[] param = inParam as int[];
 
                 string url = "https://vk.com/doc";
@@ -59,26 +60,25 @@ namespace VkDockSearch
                     progressDoc.Maximum = count;
                 }));
 
-                while (param[1] <= param[2])
-                {
-                    string doc = url + param[0] + "_" + param[1];
-                    string respnse = Get(doc);
+                Parallel.For(param[1],param[2], (i) =>
+                 {
+                     string doc = url + param[0] + "_" + i;
+                     string respnse = Get(doc);
 
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        progressDoc.PerformStep();
-                        toolStripStatusLabel1.Text = "Проверка: " + doc;
-                    }));
+                     Invoke((MethodInvoker)(() =>
+                     {
+                         progressDoc.PerformStep();
+                         toolStripStatusLabel1.Text = "Проверка: " + doc;
+                     }));
 
-                    if (!respnse.Contains("/badbrowser.php"))
-                    {
-                        StreamWriter writer = new StreamWriter("docs/id" + param[0] + "/" + param[1] + ".html");
-                        writer.WriteLine(respnse);
-                        writer.Flush();
-                        writer.Close();
-                    }
-                    param[1]++;
-                }
+                     if (!respnse.Contains("/badbrowser.php"))
+                     {
+                         StreamWriter writer = new StreamWriter("docs/id" + param[0] + "/" + i + ".html");
+                         writer.WriteLine(respnse);
+                         writer.Flush();
+                         writer.Close();
+                     }
+                 });
             });
         }
 
