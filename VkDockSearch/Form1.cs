@@ -71,7 +71,7 @@ namespace VkDockSearch
                          toolStripStatusLabel1.Text = "Проверка: " + doc;
                      }));
 
-                     if (!respnse.Contains("/badbrowser.php"))
+                     if (!respnse.Contains("/badbrowser.php") && !string.IsNullOrEmpty(respnse))
                      {
                          StreamWriter writer = new StreamWriter("docs/id" + param[0] + "/" + i + ".html");
                          writer.WriteLine(respnse);
@@ -84,17 +84,40 @@ namespace VkDockSearch
 
         public string Get(string url)
         {
-            WebRequest webRequest = WebRequest.Create(url);
-            WebResponse response = webRequest.GetResponse();
-            Stream responseStream = response.GetResponseStream();
-            if (responseStream != null)
+            try
             {
-                StreamReader streamReader = new StreamReader(responseStream);
-                string result = streamReader.ReadToEnd();
-                streamReader.Close();
-                return result;
+                WebRequest webRequest = WebRequest.Create(url);
+                webRequest.Timeout = 2000;
+                WebResponse response = webRequest.GetResponse();
+                if (((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
+                {
+                    Thread.Sleep(3000);
+                    Get(url);
+                }
+                Stream responseStream = response.GetResponseStream();
+                if (responseStream != null)
+                {
+                    StreamReader streamReader = new StreamReader(responseStream);
+                    string result = streamReader.ReadToEnd();
+                    streamReader.Close();
+                    return result;
+                }
+                response.Close();
+                responseStream.Close();
+                return string.Empty;
+            }catch(Exception er)
+            {
+                log(er);
             }
-            return null;
+            return string.Empty;
+        }
+
+        private static void log(Exception er)
+        {
+            StreamWriter streamWriter = new StreamWriter("log.txt", true);
+            streamWriter.WriteLine("[er]: \t" + er.Source + "\r\t" + er.Message + "\r\t" + er.StackTrace);
+            streamWriter.Flush();
+            streamWriter.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
