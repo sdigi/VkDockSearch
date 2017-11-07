@@ -38,6 +38,8 @@
             this.progressDoc = new System.Windows.Forms.ProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lPercent = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,9 +95,9 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(12, 90);
+            this.btnSearch.Location = new System.Drawing.Point(123, 90);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(281, 23);
+            this.btnSearch.Size = new System.Drawing.Size(170, 23);
             this.btnSearch.TabIndex = 6;
             this.btnSearch.Text = "Найти";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -105,7 +107,7 @@
             // 
             this.progressDoc.Location = new System.Drawing.Point(15, 119);
             this.progressDoc.Name = "progressDoc";
-            this.progressDoc.Size = new System.Drawing.Size(278, 23);
+            this.progressDoc.Size = new System.Drawing.Size(278, 25);
             this.progressDoc.Step = 1;
             this.progressDoc.TabIndex = 7;
             // 
@@ -113,7 +115,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 148);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 160);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(303, 22);
             this.statusStrip1.TabIndex = 8;
@@ -125,11 +127,32 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // lPercent
+            // 
+            this.lPercent.AutoSize = true;
+            this.lPercent.BackColor = System.Drawing.Color.Transparent;
+            this.lPercent.Location = new System.Drawing.Point(134, 125);
+            this.lPercent.Name = "lPercent";
+            this.lPercent.Size = new System.Drawing.Size(0, 13);
+            this.lPercent.TabIndex = 9;
+            // 
+            // btnStop
+            // 
+            this.btnStop.Location = new System.Drawing.Point(12, 90);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(105, 23);
+            this.btnStop.TabIndex = 10;
+            this.btnStop.Text = "Стоп";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 170);
+            this.ClientSize = new System.Drawing.Size(303, 182);
+            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.lPercent);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.progressDoc);
             this.Controls.Add(this.btnSearch);
@@ -161,6 +184,8 @@
         private System.Windows.Forms.ProgressBar progressDoc;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Label lPercent;
+        private System.Windows.Forms.Button btnStop;
     }
 }
 

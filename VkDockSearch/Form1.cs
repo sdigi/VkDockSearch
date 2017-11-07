@@ -20,10 +20,12 @@ namespace VkDockSearch
             InitializeComponent();
         }
 
+        bool isStop;
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
+                isStop = false;
                 int userID, docStarId, docEndId;
 
                 if (int.TryParse(tUserId.Text, out userID))
@@ -38,9 +40,11 @@ namespace VkDockSearch
                 {
                     MessageBox.Show("Укажите ID пользователя");
                 }
-            }catch(Exception er)
+            }
+            catch (Exception er)
             {
-                MessageBox.Show(er.Message);
+                log(er);
+                tDocIDStart.Text = toolStripStatusLabel1.Text.Split('_').Last();
             }
         }
 
@@ -58,28 +62,44 @@ namespace VkDockSearch
                 Invoke((MethodInvoker)(() =>
                 {
                     progressDoc.Maximum = count;
+                    progressDoc.Value = 0;
+                    lPercent.Text = string.Empty;
                 }));
 
-                Parallel.For(param[1],param[2], (i) =>
-                 {
-                     string doc = url + param[0] + "_" + i;
-                     string respnse = Get(doc);
+                Parallel.For(param[1], param[2], (i, state) =>
+                    {
+                        if (isStop)
+                        {
+                            state.Break();
+                            tDocIDStart.Text = i.ToString();
+                        }
+                        string doc = url + param[0] + "_" + i;
+                        string respnse = Get(doc);
 
-                     Invoke((MethodInvoker)(() =>
-                     {
-                         progressDoc.PerformStep();
-                         toolStripStatusLabel1.Text = "Проверка: " + doc;
-                     }));
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            progressDoc.PerformStep();
+                            toolStripStatusLabel1.Text = "Проверка: " + doc;
+                            lPercent.Text = String.Format("{0:0.####} %", (((float)progressDoc.Value / progressDoc.Maximum) * 100));
+                        }));
 
-                     if (!respnse.Contains("/badbrowser.php") && !string.IsNullOrEmpty(respnse))
-                     {
-                         StreamWriter writer = new StreamWriter("docs/id" + param[0] + "/" + i + ".html");
-                         writer.WriteLine(respnse);
-                         writer.Flush();
-                         writer.Close();
-                     }
-                 });
+                        if (!respnse.Contains("/badbrowser.php") && !string.IsNullOrEmpty(respnse))
+                        {
+                            StreamWriter writer = new StreamWriter("docs/id" + param[0] + "/" + i + ".html");
+                            writer.WriteLine(respnse);
+                            writer.Flush();
+                            writer.Close();
+                        }
+                        if (i % 80000 == 0) Thread.Sleep(5000);
+                    });
             });
+        }
+
+        public static Int32 GetPercent(Int32 b, Int32 a)
+        {
+            if (b == 0) return 0;
+
+            return (Int32)(a / (b / 100M));
         }
 
         public string Get(string url)
@@ -87,25 +107,30 @@ namespace VkDockSearch
             try
             {
                 WebRequest webRequest = WebRequest.Create(url);
-                webRequest.Timeout = 2000;
-                WebResponse response = webRequest.GetResponse();
-                if (((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
+                webRequest.Timeout = 7000;
+                using (WebResponse response = webRequest.GetResponse())
                 {
-                    Thread.Sleep(3000);
-                    Get(url);
+                    if (((HttpWebResponse)response).StatusCode != HttpStatusCode.OK)
+                    {
+                        Thread.Sleep(3000);
+                        Get(url);
+                    }
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        if (responseStream != null)
+                        {
+                            StreamReader streamReader = new StreamReader(responseStream);
+                            string result = streamReader.ReadToEnd();
+                            streamReader.Close();
+                            return result;
+                        }
+                        response.Close();
+                        responseStream.Close();
+                    }
+                    return string.Empty;
                 }
-                Stream responseStream = response.GetResponseStream();
-                if (responseStream != null)
-                {
-                    StreamReader streamReader = new StreamReader(responseStream);
-                    string result = streamReader.ReadToEnd();
-                    streamReader.Close();
-                    return result;
-                }
-                response.Close();
-                responseStream.Close();
-                return string.Empty;
-            }catch(Exception er)
+            }
+            catch (Exception er)
             {
                 log(er);
             }
@@ -126,6 +151,11 @@ namespace VkDockSearch
             {
                 Directory.CreateDirectory("docs");
             }
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            isStop = true;
         }
     }
 }
