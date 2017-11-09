@@ -23,6 +23,7 @@ namespace VkDockSearch
 
                 string url = "https://vk.com/doc";
                 int count = param[2] - param[1];
+                int sum = param[2] + param[1];
                 string pathD = "docs/id" + param[0] + "";
 
                 if (!Directory.Exists(pathD)) Directory.CreateDirectory(pathD);
@@ -36,12 +37,13 @@ namespace VkDockSearch
 
                 Parallel.For(param[1], param[2], (i, state) =>
                 {
+                    int docId = (User.Default.startToEnd) ? sum - i : i;
                     if (isStop)
                     {
                         state.Break();
-                        tDocIDStart.Text = i.ToString();
+                        tDocIDStart.Text = docId.ToString();
                     }
-                    string doc = url + param[0] + "_" + i;
+                    string doc = url + param[0] + "_" + docId;
                     string respnse = Get(doc);
 
                     Invoke((MethodInvoker)(() =>
@@ -52,9 +54,9 @@ namespace VkDockSearch
                         lPercent.Text = String.Format("{0:0.####} %", percent);
                     }));
 
-                    if (!(respnse.Contains("/badbrowser.php") || string.IsNullOrEmpty(respnse) || File.Exists(pathD + "/" + i + ".html")))
+                    if (!(respnse.Contains("/badbrowser.php") || string.IsNullOrEmpty(respnse) || File.Exists(pathD + "/" + docId + ".html")))
                     {
-                        StreamWriter writer = new StreamWriter(pathD + "/" + i + ".html");
+                        StreamWriter writer = new StreamWriter(pathD + "/" + docId + ".html");
                         writer.WriteLine(respnse);
                         writer.Flush();
                         writer.Close();
