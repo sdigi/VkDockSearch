@@ -49,6 +49,7 @@ namespace VkDockSearch
             this.progressDoc = new System.Windows.Forms.ProgressBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.settingsMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.timerCheck = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -191,6 +192,11 @@ namespace VkDockSearch
             this.settingsMenuStrip.Text = "Настройки";
             this.settingsMenuStrip.Click += new System.EventHandler(this.settingsMenuStrip_Click);
             // 
+            // timerCheck
+            // 
+            this.timerCheck.Enabled = true;
+            this.timerCheck.Interval = 5000;
+            // 
             // VkDoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -242,6 +248,7 @@ namespace VkDockSearch
         private System.Windows.Forms.ProgressBar progressDoc;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem settingsMenuStrip;
+        private Timer timerCheck;
     }
 }
 

@@ -9,6 +9,9 @@ namespace VkDockSearch
     public partial class VkDoc
     {
         bool isStop;
+        int count = 0;
+        int offset = 100000;
+        int userID, docStarId, docEndId;
 
         /// <summary>
         /// Запуск сканирование диапазона документов
@@ -22,7 +25,7 @@ namespace VkDockSearch
                 int[] param = inParam as int[];
 
                 string url = "https://vk.com/doc";
-                int count = param[2] - param[1];
+                //int count = param[2] - param[1];
                 int sum = param[2] + param[1];
                 string pathD = "docs/id" + param[0] + "";
 
@@ -30,43 +33,55 @@ namespace VkDockSearch
 
                 Invoke((MethodInvoker)(() =>
                 {
-                    progressDoc.Maximum = count;
+                    //progressDoc.Maximum = count;
                     progressDoc.Value = 0;
                     lPercent.Text = string.Empty;
                 }));
 
-                Parallel.For(param[1], param[2], (i, state) =>
-                {
-                    int docId = (User.Default.startToEnd) ? sum - i : i;
-                    if (isStop)
-                    {
-                        state.Break();
-                        tDocIDStart.Text = docId.ToString();
-                    }
-                    string doc = url + param[0] + "_" + docId;
-                    string respnse = Get(doc);
+                var loop = Parallel.For(param[1], param[2], (i, state) =>
+                 {
+                     int docId = (User.Default.startToEnd) ? sum - i : i;
+                     if (isStop)
+                     {
+                         state.Break();
+                         tDocIDStart.Text = docId.ToString();
+                     }
+                     string doc = url + param[0] + "_" + docId;
+                     string respnse = Get(doc);
 
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        progressDoc.PerformStep();
-                        var percent = (((float)progressDoc.Value / progressDoc.Maximum) * 100);
-                        toolStripStatusLabel1.Text = "Проверка: " + doc;
-                        lPercent.Text = String.Format("{0:0.####} %", percent);
-                    }));
+                     Invoke((MethodInvoker)(() =>
+                     {
+                         progressDoc.PerformStep();
+                         var percent = (((float)progressDoc.Value / progressDoc.Maximum) * 100);
+                         toolStripStatusLabel1.Text = "Проверка: " + doc;
+                         lPercent.Text = String.Format("{0:0.####} %", percent);
+                     }));
 
-                    if (!(respnse.Contains("/badbrowser.php") || string.IsNullOrEmpty(respnse) || File.Exists(pathD + "/" + docId + ".html")))
-                    {
-                        StreamWriter writer = new StreamWriter(pathD + "/" + docId + ".html");
-                        writer.WriteLine(respnse);
-                        writer.Flush();
-                        writer.Close();
-                        Invoke((MethodInvoker)(() =>
-                        {
-                            lFindCount.Text = (int.Parse(lFindCount.Text) + 1).ToString();
-                        }));
-                    }
-                });
+                     if (!(respnse.Contains("/badbrowser.php") || string.IsNullOrEmpty(respnse) || File.Exists(pathD + "/" + docId + ".html")))
+                     {
+                         StreamWriter writer = new StreamWriter(pathD + "/" + docId + ".html");
+                         writer.WriteLine(respnse);
+                         writer.Flush();
+                         writer.Close();
+                         Invoke((MethodInvoker)(() =>
+                         {
+                             lFindCount.Text = (int.Parse(lFindCount.Text) + 1).ToString();
+                         }));
+                     }
+                 });
+
+                if (loop.IsCompleted) CheckEndValue(param);
             });
+        }
+
+        private async void CheckEndValue(int[] param)
+        {
+            if (progressDoc.Value < progressDoc.Maximum)
+            {
+                docStarId = docEndId;
+                docEndId += offset;
+                await ParsingDocUserIdAync(new int[] { param[0], docStarId, docEndId });
+            }
         }
 
         /// <summary>

@@ -20,12 +20,14 @@ namespace VkDockSearch
             try
             {
                 isStop = false;
-                int userID, docStarId, docEndId;
 
                 if (int.TryParse(tUserId.Text, out userID))
                 {
                     if (int.TryParse(tDocIDStart.Text, out docStarId) && int.TryParse(tDocIDEnd.Text, out docEndId))
                     {
+                        count = docEndId - docStarId;
+                        progressDoc.Maximum = count;
+                        docEndId += offset;
                         int[] param = { userID, docStarId, docEndId };
                         await ParsingDocUserIdAync(param);
                     }
